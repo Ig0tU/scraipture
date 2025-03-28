@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraipture Pro - Advanced Web Data Extraction</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Highlight.js Theme -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/github-dark.min.css">
+    
+    <!-- Required Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/lib/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    },
+                    colors: {
+                        primary: {
+                            500: '#5655ff',
+                            600: '#4444ee'
+                        }
+                    },
+                    animation: {
+                        'spin-slow': 'spin 3s linear infinite'
+                    }
+                }
+            }
+        };
+    </script>
+    
+    <style>
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(86, 85, 255, 0.3);
+            border-radius: 3px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(86, 85, 255, 0.5);
+        }
+        
+        /* Loading Animation */
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+        
+        /* Progress Bar Animation */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #f0f0ff;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #5655ff, #ff5655);
+            animation: progress-animation 2s linear infinite;
+            transform-origin: left;
+        }
+        
+        @keyframes progress-animation {
+            0% { transform: scaleX(0); }
+            50% { transform: scaleX(0.5); }
+            100% { transform: scaleX(1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold gradient-text">
+                        <i class="fas fa-spider mr-2"></i>Scraipture Pro
+                    </span>
+                </div>
+                
+                <!-- Navigation Items -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button class="px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </button>
+                    <button class="px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-book mr-2"></i>Documentation
+                    </button>
+                    <button class="px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </button>
+                </div>
+                
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:block"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Hero Section -->
+            <section class="text-center py-12">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                    Advanced Web Data Extraction
+                </h1>
+                <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
+                    Extract, analyze, and visualize web data with powerful tools and beautiful interfaces
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <button class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                        <i class="fas fa-book mr-2"></i>Learn More
+                    </button>
+                </div>
+            </section>
+
+            <!-- Main Interface -->
+            <section class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <!-- URL Input -->
+                <div class="mb-6">
+                    <div class="flex space-x-4">
+                        <input type="text" 
+                               id="urlInput"
+                               placeholder="Enter URL to extract data..." 
+                               class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <button id="extractButton" class="px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors">
+                            <i class="fas fa-download mr-2"></i>Extract
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div id="contentArea" class="mt-6">
+                    <!-- Initial State -->
+                    <div class="text-center py-12 text-gray-500">
+                        <div class="text-6xl mb-4">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <p class="text-xl">Enter a URL above to begin extraction</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 shadow-lg mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold gradient-text">Scraipture Pro</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Advanced Web Data Extraction</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary-500">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary-500">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary-500">
+                        <i class="fab fa-discord text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Load our utils last -->
+    <script src="scraipture-utils-enhanced.js"></script>
+    <script>
+        // Initialize Scraipture
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlInput = document.getElementById('urlInput');
+            const extractButton = document.getElementById('extractButton');
+            const contentArea = document.getElementById('contentArea');
+
+            // Handle extraction button click
+            extractButton.addEventListener('click', async () => {
+                try {
+                    await startExtraction(urlInput, contentArea);
+                } catch (error) {
+                    console.error('Extraction failed:', error);
+                    showError(contentArea, error.message);
+                }
+            });
+
+            // Handle Enter key in URL input
+            urlInput.addEventListener('keypress', async (e) => {
+                if (e.key === 'Enter') {
+                    try {
+                        await startExtraction(urlInput, contentArea);
+                    } catch (error) {
+                        console.error('Extraction failed:', error);
+                        showError(contentArea, error.message);
+                    }
+                }
+            });
+        });
+
+        // Start extraction process
+        async function startExtraction(urlInput, contentArea) {
+            if (!urlInput.value) {
+                urlInput.value = window.location.href; // Use current page as demo
+            }
+
+            // Show loading state
+            contentArea.innerHTML = `
+                <div class="text-center py-12">
+                    <div class="text-6xl text-primary-500 mb-4 animate-spin-slow">
+                        <i class="fas fa-circle-notch"></i>
+                    </div>
+                    <p class="text-xl text-gray-600 dark:text-gray-300 loading-dots">
+                        Extracting data
+                    </p>
+                    <div class="max-w-md mx-auto mt-4">
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            try {
+                // Extract data
+                const doc = await scraipture.core.initialize(urlInput.value);
+                const content = await scraipture.core.extractAllContent(doc);
+                
+                // Analyze data
+                const analysis = scraipture.analytics.analyzeContent(content);
+                const visualData = scraipture.analytics.generateChartData(analysis);
+
+                // Update UI with results
+                contentArea.innerHTML = `
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Data View -->
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                            <h3 class="text-xl font-semibold mb-4">Extracted Data</h3>
+                            <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg overflow-auto max-h-96 custom-scrollbar">
+                                <code>${JSON.stringify(content, null, 2)}</code>
+                            </pre>
+                        </div>
+
+                        <!-- Analytics View -->
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                            <h3 class="text-xl font-semibold mb-4">Analysis</h3>
+                            <div class="space-y-6">
+                                <canvas id="content-chart"></canvas>
+                                <canvas id="readability-chart"></canvas>
+                                <canvas id="sentiment-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Export Options -->
+                    <div class="mt-6 flex justify-end space-x-4">
+                        <button onclick="exportData('json')" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                            <i class="fas fa-file-code mr-2"></i>Export JSON
+                        </button>
+                        <button onclick="exportData('csv')" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                            <i class="fas fa-file-csv mr-2"></i>Export CSV
+                        </button>
+                        <button onclick="exportData('zip')" class="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors">
+                            <i class="fas fa-file-archive mr-2"></i>Export All
+                        </button>
+                    </div>
+                `;
+
+                // Create visualizations
+                scraipture.analytics.createVisualizations(visualData, contentArea);
+            } catch (error) {
+                throw new Error(`Extraction failed: ${error.message}`);
+            }
+        }
+
+        // Show error message
+        function showError(contentArea, message) {
+            contentArea.innerHTML = `
+                <div class="text-center py-12 text-red-500">
+                    <div class="text-6xl mb-4">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <p class="text-xl">Failed to extract data: ${message}</p>
+                </div>
+            `;
+        }
+
+        // Export data in selected format
+        async function exportData(format) {
+            try {
+                const urlInput = document.getElementById('urlInput');
+                const doc = await scraipture.core.initialize(urlInput.value);
+                const content = await scraipture.core.extractAllContent(doc);
+
+                if (format === 'zip') {
+                    const zip = await scraipture.export.createPackage(content);
+                    const blob = new Blob([zip], { type: 'application/zip' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'scraipture-export.zip';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                } else {
+                    const data = await scraipture.export.exportData(content, format);
+                    const blob = new Blob([data], { type: `application/${format}` });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `scraipture-export.${format}`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+            } catch (error) {
+                console.error('Export failed:', error);
+                alert(`Failed to export data: ${error.message}`);
+            }
+        }
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        // Check for saved theme preference or system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        
+        // Theme toggle handler
+        themeToggle.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        });
+    </script>
+</body>
+</html>
