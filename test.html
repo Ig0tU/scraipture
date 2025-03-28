@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraipture Utils Test</title>
+    <script src="scraipture-utils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.1/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .test-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .output {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            margin-top: 10px;
+        }
+        button {
+            padding: 8px 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scraipture Utils Test</h1>
+
+    <div class="test-section">
+        <h2>Domain Word Generation Test</h2>
+        <button onclick="testDomainWords('example.com')">Test example.com</button>
+        <button onclick="testDomainWords('techblog.com')">Test techblog.com</button>
+        <button onclick="testDomainWords('onlineshop.com')">Test onlineshop.com</button>
+        <div id="domain-words-output" class="output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Text Generation Test</h2>
+        <button onclick="testTextGeneration('example.com')">Generate Example Text</button>
+        <button onclick="testTextGeneration('techblog.com')">Generate Tech Blog Text</button>
+        <div id="text-output" class="output"></div>
+    </div>
+
+    <script>
+        function testDomainWords(domain) {
+            const output = document.getElementById('domain-words-output');
+            const words = generateDomainWords(domain);
+            output.textContent = `Words for ${domain}:\n${words.join(', ')}`;
+        }
+
+        function testTextGeneration(domain) {
+            const output = document.getElementById('text-output');
+            const heading = generateHeadingText(domain, 4, 8);
+            const words = generateDomainWords(domain);
+            const paragraph = generateParagraphText(words, 15, 30);
+            
+            output.textContent = `Domain: ${domain}\n\nHeading:\n${heading}\n\nParagraph:\n${paragraph}`;
+        }
+    </script>
+</body>
+</html>
