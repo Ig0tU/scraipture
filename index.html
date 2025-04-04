@@ -314,29 +314,53 @@
                     </div>
                 </div>
 
-                <!-- IEP Preview Panel -->
-                 <div id="previewPanel" role="tabpanel" aria-labelledby="preview-tab" class="hidden flex-grow flex flex-col animate-fade-in">
-                     <div class="flex-grow overflow-y-auto p-1">
-                         <div class="bg-base-200 dark:bg-dark-300 border border-base-300 dark:border-dark-300 rounded-lg p-6 shadow-inner min-h-full">
-                            <div id="iepPreviewContent">
-                                <div class="text-center mb-6 border-b border-base-300 dark:border-dark-300 pb-3"><h2 class="text-xl font-bold text-primary-default">INDIVIDUALIZED EDUCATION PROGRAM</h2><p class="text-sm text-gray-500 dark:text-gray-400" id="previewStatus">Select a student</p></div>
-                                <div id="preview-details"><p class="text-center text-gray-500 dark:text-gray-400 italic mt-6">Select a single student to preview their IEP.</p></div>
+                <!-- IEP Preview Panel (initially hidden) -->
+                <div id="previewPanel" class="hidden flex-grow overflow-y-auto h-[calc(100vh-200px)]">
+                    <div class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-6 shadow-sm">
+                        <div id="iepPreviewContent">
+                            <div class="text-center mb-6">
+                                <h2 class="text-xl font-bold">INDIVIDUALIZED EDUCATION PROGRAM</h2>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Preview - Final document will be formatted according to Indiana DOE requirements</p>
                             </div>
-                         </div>
-                     </div>
-                    <div class="mt-4 flex flex-wrap justify-between gap-3 border-t border-base-300 dark:border-dark-300 pt-3">
-                        <button id="generateIepBtn" type="button" class="btn btn-accent flex items-center gap-1">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-                            </svg>
-                            Generate AI IEP
-                        </button>
-                        <div class="flex items-center gap-3">
-                            <span id="pdfStatus" class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1"></span>
-                            <button id="previewPdfBtn" type="button" class="btn btn-primary flex items-center gap-1" disabled>
-                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><use href="#icon-pdf" /></svg> Export PDF
-                            </button>
+                            
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-600 pb-1 mb-2">Student Information</h3>
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    <div><span class="font-medium">Name:</span> <span id="preview-name">-</span></div>
+                                    <div><span class="font-medium">Grade:</span> <span id="preview-grade">-</span></div>
+                                    <div><span class="font-medium">Disability:</span> <span id="preview-disability">-</span></div>
+                                    <div><span class="font-medium">Date:</span> <span id="preview-date"></span></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-600 pb-1 mb-2">Present Level of Performance</h3>
+                                <p id="preview-performance" class="text-sm">-</p>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-600 pb-1 mb-2">Special Accommodations</h3>
+                                <p id="preview-accommodations" class="text-sm">-</p>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-600 pb-1 mb-2">Goals and Objectives</h3>
+                                <div id="preview-goals" class="space-y-4">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 italic">No goals have been created yet. Use the chat assistant to create SMART goals for this student.</p>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                    
+                    <div class="mt-4 flex justify-end gap-3">
+                        <button id="previewPdfBtn" class="px-4 py-2 bg-primary hover:bg-secondary text-white rounded-md transition">
+                            <span class="flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414 a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Export to PDF
+                            </span>
+                        </button>
                     </div>
                 </div>
 
